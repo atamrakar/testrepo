@@ -27,8 +27,8 @@ node{
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
                 mail bcc: '', body: "ILP code did not succesfully pass the build and unit-test jobs in the Continuous Integration pipeline.\nFor more details go to : ${error_url} ", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', from: '', mimeType: 'text/plain', replyTo: '', subject: "Failed Build Report- ${git_branch_name}", to: "${lines}"
-                sh "exit 1"
-} finally {
+		throw e
+		} finally {
     notifyBuild(currentBuild.result)
   }
 }
