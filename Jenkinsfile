@@ -10,13 +10,25 @@ node{
         try
         {
 	stage 'Checkout'
-  	checkout scm
+  	try
+	{
+		checkout scm 
+	} catch(e) {
+			notifyBuild(currentBuild.result)
+	} finally {
 		notifyBuild(currentBuild.result)
-    
+	}
+		
   	stage 'Build_Backend_Code'
-	echo "Running: Build_Backend_Code"
+	try
+	{
+		echo "Running: Build_Backend_Code"
 	sh "exit 1"
+	} catch (e) {
 	notifyBuild(currentBuild.result)
+	} finally {
+		notifyBuild(currentBuild.result)
+	}
 }
         catch(Exception e)
         { 
