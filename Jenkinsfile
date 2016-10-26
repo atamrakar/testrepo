@@ -6,7 +6,6 @@ git_branch_name = branch_name.replaceAll("%2F","/")
 url_branch_name = git_branch_name.replaceAll("/","%252F")
 
 node{   
-	notifyBuild("STARTED")
 	try 
 	{
 	stage 'Checkout'
@@ -18,9 +17,10 @@ node{
 }
         catch(Exception e)
         { 
-		throw e
-		notifyBuild(currentBuild.result)
-		
+		stage('Email') {
+			notifyBuild(currentBuild.result)
+			throw e
+		}
 				}
 }
 	
@@ -38,7 +38,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
-  } else {
+  } else if (buildStatus == 'FAILED') {
     color = 'RED'
     colorCode = '#FF0000'
 	  step([$class: 'GitHubCommitStatusSetter',
@@ -49,7 +49,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
         message: 'The Build was ${buildStatus}',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
-  }
+	    }
 		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStatus}\ncheck ${env.BUILD_URL}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
