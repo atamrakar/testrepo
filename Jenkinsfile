@@ -24,9 +24,9 @@ node{
         catch(Exception err)
         { 
 		stage('Email') {
-			notifyBuild(currentBuild.result)
+			notifyBuild("FAILED")
 			throw err
-			sh "exit 1"
+			//sh "exit 1"
 		}
 	}
 }
