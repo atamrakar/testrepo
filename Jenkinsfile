@@ -3,11 +3,13 @@ node{
         {
 	stage 'Checkout'
   	checkout scm
+		seeenv()
 		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "pwd"
+		seeenv()
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
@@ -20,6 +22,12 @@ node{
   }
 }
 
+def seeenv() {
+	for(e in env){
+        echo e + " is " + ${e}
+	}
+}
+	
 def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
 	
@@ -44,8 +52,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     color = 'RED'
     colorCode = '#FF0000'
   }
-	stage 'Email Notification'
-	println "Continuous Integration pipeline on ${url_branch_name}: ${buildStatus}\ncheck ${env.BUILD_URL}"
+		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStatus}\ncheck ${env.BUILD_URL}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
