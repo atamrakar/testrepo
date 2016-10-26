@@ -4,6 +4,7 @@ job_name = job[0]
 branch_name = job[1]
 git_branch_name = branch_name.replaceAll("%2F","/")
 url_branch_name = git_branch_name.replaceAll("/","%252F")
+status
 
 node{   
 	try 
@@ -17,7 +18,8 @@ node{
 		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
 		if(${reti} > 0) {
-		currentBuild.result="FAILED"	
+		currentBuild.result = "FAILED"
+			buildStatus = "FAILED"
 		}
 }
         catch(Exception e)
