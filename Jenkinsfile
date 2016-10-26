@@ -26,8 +26,6 @@ node{
 			notifyBuild(currentBuild.result)
 			throw e
 		}
-	} finally {
-	notifyBuild(currentBuild.result)	
 	}
 }
 	
@@ -45,15 +43,23 @@ def notifyBuild(String buildStatus = 'STARTED') {
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
+	  step([$class: 'GitHubCommitStatusSetter',
+        contextSource: [$class: 'ManuallyEnteredCommitContextSource',
+        context: 'SUCCESS Report'],
+        statusResultSource: [$class: 'ConditionalStatusResultSource',
+        results: [[$class: 'AnyBuildResult',
+        message: 'The Build was SUCCESSFUL',
+        state: '${buildStatus}']]]])
+        echo "status set to ${buildStatus}."
   } else if (buildStatus == 'FAILED') {
     color = 'RED'
     colorCode = '#FF0000'
 	  step([$class: 'GitHubCommitStatusSetter',
         contextSource: [$class: 'ManuallyEnteredCommitContextSource',
-        context: '${buildStatus} Report'],
+        context: 'FAILED Report'],
         statusResultSource: [$class: 'ConditionalStatusResultSource',
         results: [[$class: 'AnyBuildResult',
-        message: 'The Build was ${buildStatus}',
+        message: 'The Build was FAILED',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
 	    }
