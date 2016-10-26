@@ -16,7 +16,7 @@ node{
 			def ret = sh(script: 'uname', returnStdout: true)
 		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
-		if(${reti} > 0) {
+		if(reti > 0) {
 		notifyBuild("FAILED")
 		}
 }
