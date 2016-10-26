@@ -3,13 +3,17 @@ node{
         {
 	stage 'Checkout'
   	checkout scm
-		seeenv()
+for(j in env){
+        echo j + " is " + ${j}
+	}		
 		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "pwd"
-		seeenv()
+		for(k in env){
+        echo k + " is " + ${k}
+	}
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
@@ -20,12 +24,6 @@ node{
 				} finally {
     notifyBuild(currentBuild.result)
   }
-}
-
-def seeenv() {
-	for(e in env){
-        echo e + " is " + ${e}
-	}
 }
 	
 def notifyBuild(String buildStatus = 'STARTED') {
