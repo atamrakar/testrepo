@@ -32,15 +32,23 @@ node{
 		notifyBuild(currentBuild.result)
 	}
 }
+
+def sendMail(String buildStat) {
+	def subject = "${buildStat}: Job '${job} [${build_number}]'"
+	def summary = "${subject} (${env.BUILD_URL})"
+		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStat}\ncheck ${env.BUILD_URL}"
+                sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
+  		def lines = readFile("lastAuthor")
+                println "Email notifications will be send to : ${lines}"
+	mail bcc: '', body: "${summary}", cc: 'atamrakar@localhost', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "atamrakar@localhost"
+}
 	
 def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
 	
 	def colorName = 'RED'
   	def colorCode = '#FF0000'
-	def subject = "${buildStatus}: Job '${job} [${build_number}]'"
-  	def summary = "${subject} (${env.BUILD_URL})"
-
+	
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
     colorCode = '#FFFF00'
@@ -55,6 +63,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
         message: 'The Build was SUCCESSFUL',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
+	  sendMail("SUCCESSFUL")
   } else if (buildStatus == 'FAILED') {
     color = 'RED'
     colorCode = '#FF0000'
@@ -66,10 +75,6 @@ def notifyBuild(String buildStatus = 'STARTED') {
         message: 'The Build was FAILED',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
+	  sendMail("FAILED")
 	    }
-		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStatus}\ncheck ${env.BUILD_URL}"
-                sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
-  		def lines = readFile("lastAuthor")
-                println "Email notifications will be send to : ${lines}"
-	mail bcc: '', body: "${summary}", cc: 'atamrakar@localhost', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "atamrakar@localhost"
 }
