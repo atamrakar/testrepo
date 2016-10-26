@@ -23,7 +23,7 @@ node{
 	try
 	{
 		echo "Running: Build_Backend_Code"
-	sh "exit 1"
+	sh "aws run instance"
 	} catch (e) {
 	notifyBuild(currentBuild.result)
 	} finally {
