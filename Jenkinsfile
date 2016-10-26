@@ -17,8 +17,7 @@ node{
 		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
 		if(${reti} > 0) {
-		currentBuild.result = "FAILED"
-			buildStatus = "FAILED"
+		notifyBuild("FAILED")
 		}
 }
         catch(Exception e)
