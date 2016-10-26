@@ -1,13 +1,4 @@
-node{
-
-        def build_number = "${env.BUILD_NUMBER}"
-        def job = env.JOB_NAME.split('/')
-        def job_name = job[0]
-        def branch_name = job[1]
-  	def git_branch_name = branch_name.replaceAll("%2F","/")
-  	def url_branch_name = git_branch_name.replaceAll("/","%252F")
-        def error_url = "http://localhost:8080/job/${job_name}/job/${url_branch_name}/${build_number}/console"
-
+node{     
         try
         {
 	stage 'Checkout'
@@ -31,10 +22,16 @@ node{
 
 def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
-
+	
+	def build_number = "${env.BUILD_NUMBER}"
+        def job = env.JOB_NAME.split('/')
+        def job_name = job[0]
+        def branch_name = job[1]
+  	def git_branch_name = branch_name.replaceAll("%2F","/")
+  	def url_branch_name = git_branch_name.replaceAll("/","%252F")
   def colorName = 'RED'
   def colorCode = '#FF0000'
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+	def subject = "${buildStatus}: Job '${job} [${build_number}]'"
   def summary = "${subject} (${env.BUILD_URL})"
 
   if (buildStatus == 'STARTED') {
@@ -48,7 +45,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     colorCode = '#FF0000'
   }
 	stage 'Email Notification'
-	println "Continuous Integration pipeline at ${env.currentBuild.rawBuild}: ${buildStatus}"
+	println "Continuous Integration pipeline on ${url_branch_name}: ${buildStatus}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
