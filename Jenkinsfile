@@ -13,10 +13,8 @@ node{
   	try
 	{
 		checkout scm 
-	} catch(e) {
+	} catch(Exception er) {
 			notifyBuild(currentBuild.result)
-	} finally {
-		notifyBuild(currentBuild.result)
 	}
 		
   	stage 'Build_Backend_Code'
@@ -24,10 +22,8 @@ node{
 	{
 		echo "Running: Build_Backend_Code"
 	sh "aws run instance"
-	} catch (e) {
+	} catch (Exception err) {
 	notifyBuild(currentBuild.result)
-	} finally {
-		notifyBuild(currentBuild.result)
 	}
 }
         catch(Exception e)
