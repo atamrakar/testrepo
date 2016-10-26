@@ -13,9 +13,8 @@ node{
 		
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
-	sh "aws run instance" 
-		def ret = sh(script: 'uname', returnStdout: true)
-		def reti = sh(script: 'unamer', returnStdout: true)
+			def ret = sh(script: 'uname', returnStdout: true)
+		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
 		echo "reti=${reti}"
 }
