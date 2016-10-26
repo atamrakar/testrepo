@@ -1,3 +1,10 @@
+build_number = "${env.BUILD_NUMBER}"
+job = env.JOB_NAME.split('/')
+job_name = job[0]
+branch_name = job[1]
+git_branch_name = branch_name.replaceAll("%2F","/")
+url_branch_name = git_branch_name.replaceAll("/","%252F")
+
 node{     
         try
         {
@@ -23,14 +30,8 @@ node{
 def notifyBuild(String buildStatus = 'STARTED') {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
 	
-	def build_number = "${env.BUILD_NUMBER}"
-        def job = env.JOB_NAME.split('/')
-        def job_name = job[0]
-        def branch_name = job[1]
-  	def git_branch_name = branch_name.replaceAll("%2F","/")
-  	def url_branch_name = git_branch_name.replaceAll("/","%252F")
-  def colorName = 'RED'
-  def colorCode = '#FF0000'
+	def colorName = 'RED'
+  	def colorCode = '#FF0000'
 	def subject = "${buildStatus}: Job '${job} [${build_number}]'"
   def summary = "${subject} (${env.BUILD_URL})"
 
