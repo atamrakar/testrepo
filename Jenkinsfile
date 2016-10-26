@@ -35,7 +35,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   def colorName = 'RED'
   def colorCode = '#FF0000'
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
+  def summary = "${subject} (${env.BUILD_URL}) - ${errorUrl(e)}"
 
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
@@ -48,7 +48,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     colorCode = '#FF0000'
   }
 	stage 'Email Notification'
-                println "Continuous Integration pipeline at ${env.JOB_NAME}: ${buildStatus}"
+                println "Continuous Integration pipeline at ${errorUrl(e)}: ${buildStatus}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
