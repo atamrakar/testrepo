@@ -48,7 +48,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     colorCode = '#FF0000'
   }
 	stage 'Email Notification'
-                println "Continuous Integration pipeline at: ${buildStatus}"
+	println "Continuous Integration pipeline at ${currentBuild.rawBuild}: ${buildStatus}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
