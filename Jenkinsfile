@@ -11,24 +11,20 @@ node{
         try
         {
 	stage 'Checkout'
-  	checkout scm             
+  	checkout scm
+		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "pwd"
+		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
         catch(e)
         { 
-		currentBuild.result = "FAILED"
-		stage 'Email Notification'
-                println "ERROR: Continuous Integration pipeline failed"
-                sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
-  		def lines = readFile("lastAuthor")
-                println "Email notifications will be send to : ${lines}"
-                mail bcc: '', body: "ILP code did not succesfully pass the build and unit-test jobs in the Continuous Integration pipeline.\nFor more details go to : ${error_url} ", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', from: '', mimeType: 'text/plain', replyTo: '', subject: "Failed Build Report- ${git_branch_name}", to: "${lines}"
+		notifyBuild(currentBuild.result)
 		throw e
-		} finally {
+				} finally {
     notifyBuild(currentBuild.result)
   }
 }
@@ -51,6 +47,10 @@ def notifyBuild(String buildStatus = 'STARTED') {
     color = 'RED'
     colorCode = '#FF0000'
   }
-
-  slackSend (color: colorCode, message: summary)
+	stage 'Email Notification'
+                println "Continuous Integration pipeline failed: ${buildStatus}"
+                sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
+  		def lines = readFile("lastAuthor")
+                println "Email notifications will be send to : ${lines}"
+                mail bcc: '', body: "code ${buildStatus} the build and unit-test jobs in the Continuous Integration pipeline.\nFor more details go to : ${error_url} ", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', from: '', mimeType: 'text/plain', replyTo: '', subject: "Failed Build Report- ${git_branch_name}", to: "${lines}"
 }
