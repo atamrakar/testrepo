@@ -52,5 +52,5 @@ def notifyBuild(String buildStatus = 'STARTED') {
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
-	mail bcc: '', body: "${summary}", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', from: '', mimeType: 'text/plain', replyTo: '', subject: "${subject}", to: "${lines}"
+	mail bcc: '', body: "${summary}", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "${lines}"
 }
