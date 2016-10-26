@@ -20,9 +20,7 @@ node{
         { 
 		notifyBuild(currentBuild.result)
 		throw e
-				} finally {
-notifyBuild(currentBuild.result)
-  }
+				}
 }
 	
 def notifyBuild(String buildStatus = 'STARTED') {
