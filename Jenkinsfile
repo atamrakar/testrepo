@@ -25,7 +25,7 @@ node{
         { 
 		stage('Email') {
 			notifyBuild(currentBuild.result)
-			throw e
+			throw err
 			sh "exit 1"
 		}
 	}
