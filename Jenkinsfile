@@ -28,6 +28,8 @@ node{
 			throw err
 			//sh "exit 1"
 		}
+	} finally {
+		notifyBuild(currentBuild.result)
 	}
 }
 	
