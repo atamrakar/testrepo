@@ -3,26 +3,18 @@ node{
         {
 	stage 'Checkout'
   	checkout scm
-sh 'env > env.txt'
-    readFile('env.txt').split("\r?\n").each {
-        println it	
-    }
 		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "pwd"
-	sh 'env > env.txt'
-    readFile('env.txt').split("\r?\n").each {
-        println it
-    }
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
         catch(e)
         { 
-		notifyBuild(currentBuild.result)
 		throw e
+		notifyBuild(currentBuild.result)
 				} finally {
     notifyBuild(currentBuild.result)
   }
