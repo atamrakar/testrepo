@@ -18,8 +18,9 @@ node{
 }
         catch(Exception e)
         { 
-		notifyBuild(currentBuild.result)
 		throw e
+		notifyBuild(currentBuild.result)
+		
 				}
 }
 	
