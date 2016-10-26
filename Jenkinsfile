@@ -13,18 +13,20 @@ node{
 		
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
-			def ret = sh(script: 'uname', returnStdout: true)
-		def reti = sh(script: 'unamer', returnStatus: true)
+//			def ret = sh(script: 'uname', returnStdout: true)
+/*		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
 		if(reti > 0) {
 		notifyBuild("FAILED")
-		}
+		} */
+		sh "aws run instance"
 }
-        catch(Exception e)
+        catch(Exception err)
         { 
 		stage('Email') {
 			notifyBuild(currentBuild.result)
 			throw e
+			sh "exit 1"
 		}
 	}
 }
