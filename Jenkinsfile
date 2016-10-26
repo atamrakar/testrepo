@@ -7,24 +7,14 @@ url_branch_name = git_branch_name.replaceAll("/","%252F")
 
 node{   
 	notifyBuild("STARTED")
-        try
-        {
-	stage 'Checkout'
-  	try
+	try 
 	{
-		checkout scm 
-	} catch(Exception er) {
-			notifyBuild(currentBuild.result)
-	}
+	stage 'Checkout'
+  	checkout scm 
 		
   	stage 'Build_Backend_Code'
-	try
-	{
-		echo "Running: Build_Backend_Code"
-	sh "aws run instance"
-	} catch (Exception err) {
-	notifyBuild(currentBuild.result)
-	}
+	echo "Running: Build_Backend_Code"
+	sh "aws run instance"	
 }
         catch(Exception e)
         { 
