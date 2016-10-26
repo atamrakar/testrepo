@@ -23,9 +23,12 @@ node{
 }
         catch(Exception err)
         { 
-		stage('Email') {
-			notifyBuild("FAILED")
+		//stage('Email') {
+		//	notifyBuild("FAILED")
 			//sh "exit 1"
+		if (currentBuild.result == 'UNSTABLE')
+    currentBuild.result = 'FAILURE'
+  throw err
 		}
 	} finally {
 		echo "entering finally"
