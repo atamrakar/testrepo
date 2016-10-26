@@ -29,6 +29,7 @@ node{
 			//sh "exit 1"
 		}
 	} finally {
+		echo "entering finally"
 		notifyBuild(currentBuild.result)
 	}
 }
