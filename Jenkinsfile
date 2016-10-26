@@ -3,17 +3,17 @@ node{
         {
 	stage 'Checkout'
   	checkout scm
-for(j in env){
-        echo j + " is " + ${j}
-	}		
+sh 'env > env.txt'
+    readFile('env.txt').split("\r?\n").each {
+        println it		
 		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "pwd"
-		for(k in env){
-        echo k + " is " + ${k}
-	}
+	sh 'env > env.txt'
+    readFile('env.txt').split("\r?\n").each {
+        println it
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
