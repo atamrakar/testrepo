@@ -15,7 +15,7 @@ node{
     
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
-	sh "pwd"
+	sh "exit 1"
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
@@ -58,5 +58,5 @@ def notifyBuild(String buildStatus = 'STARTED') {
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
-	mail bcc: '', body: "${summary}", cc: 'abhishek.tamrakar@reancloud.com', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "${lines}"
+	mail bcc: '', body: "${summary}", cc: 'atamrakar@localhost', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "atamrakar@localhost"
 }
