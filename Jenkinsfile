@@ -16,9 +16,9 @@ node{
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
 	sh "exit 1"
-notifyBuild(currentBuild.result)
+	notifyBuild(currentBuild.result)
 }
-        catch(e)
+        catch(Exception e)
         { 
 		notifyBuild(currentBuild.result)
 		throw e
