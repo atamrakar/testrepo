@@ -16,7 +16,9 @@ node{
 			def ret = sh(script: 'uname', returnStdout: true)
 		def reti = sh(script: 'unamer', returnStatus: true)
 		echo "ret=${ret}"
-		echo "reti=${reti}"
+		if(${reti} > 0) {
+		currentBuild.result="FAILED"	
+		}
 }
         catch(Exception e)
         { 
@@ -24,7 +26,9 @@ node{
 			notifyBuild(currentBuild.result)
 			throw e
 		}
-				}
+	} finally {
+	notifyBuild(currentBuild.result)	
+	}
 }
 	
 def notifyBuild(String buildStatus = 'STARTED') {
