@@ -5,7 +5,8 @@ node{
   	checkout scm
 sh 'env > env.txt'
     readFile('env.txt').split("\r?\n").each {
-        println it		
+        println it	
+    }
 		notifyBuild(currentBuild.result)
     
   	stage 'Build_Backend_Code'
@@ -14,6 +15,7 @@ sh 'env > env.txt'
 	sh 'env > env.txt'
     readFile('env.txt').split("\r?\n").each {
         println it
+    }
 		notifyBuild(currentBuild.result)
  	echo "test run coompleted"
 }
