@@ -29,7 +29,7 @@ node{
 		  		}
 		throw err
 	} 
-	notifyBuild("SUCCESSFUL")
+	notifyBuild("SUCCESSFUL","OKAY")
 }
 
 def sendMail(String buildStat,String errr) {
@@ -62,7 +62,7 @@ def notifyBuild(String buildStatus = 'STARTED',String thiserr) {
         message: 'The Build was SUCCESSFUL',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
-	  sendMail("SUCCESSFUL")
+	  sendMail("SUCCESSFUL","OKAY")
   } else if (buildStatus == 'FAILED') {
     color = 'RED'
     colorCode = '#FF0000'
