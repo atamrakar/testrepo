@@ -19,12 +19,12 @@ node{
 		if(reti > 0) {
 		notifyBuild("FAILED")
 		} */
-		sh "uname"
+		sh "aws run"
 }
         catch(Exception err)
         { 
 		stage('Email') {
-			notifyBuild("FAILED")
+			notifyBuild("FAILED","${err}")
 			//sh "exit 1"
 		  		}
 		throw err
@@ -32,9 +32,9 @@ node{
 	notifyBuild("SUCCESSFUL")
 }
 
-def sendMail(String buildStat) {
+def sendMail(String buildStat,String errr) {
 	def subject = "${buildStat}: Job '${job} [${build_number}]'"
-	def summary = "${subject} (${env.BUILD_URL})"
+	def summary = "${subject} with ${errr}\n(${env.BUILD_URL})"
 		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStat}\ncheck ${env.BUILD_URL}"
                 sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
@@ -42,7 +42,7 @@ def sendMail(String buildStat) {
 	mail bcc: '', body: "${summary}", cc: 'atamrakar@localhost', charset: 'UTF-8', mimeType: 'text/plain', subject: "${subject}", to: "atamrakar@localhost"
 }
 	
-def notifyBuild(String buildStatus = 'STARTED') {
+def notifyBuild(String buildStatus = 'STARTED',String thiserr) {
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
 	
 	def colorName = 'RED'
@@ -74,6 +74,6 @@ def notifyBuild(String buildStatus = 'STARTED') {
         message: 'The Build was FAILED',
         state: '${buildStatus}']]]])
         echo "status set to ${buildStatus}."
-	  sendMail("FAILED")
+	  sendMail("FAILED","${thiserr}")
 	    }
 }
