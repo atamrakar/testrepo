@@ -19,7 +19,7 @@ node{
 		if(reti > 0) {
 		notifyBuild("FAILED")
 		} */
-		sh "aws run"
+		sh "uname"
 }
         catch(Exception err)
         { 
