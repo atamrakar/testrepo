@@ -13,14 +13,11 @@ node{
 		
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
-//			def ret = sh(script: 'uname', returnStdout: true)
-/*		def reti = sh(script: 'unamer', returnStatus: true)
-		echo "ret=${ret}"
-		if(reti > 0) {
-		notifyBuild("FAILED")
-		} */
-		sh "uname"
-		step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
+		sh "pwd;mkdir test && cd test/"
+	
+	stage 'Next_Step'
+		echo "running next step"
+		sh "pwd"
 }
         catch(Exception err)
         { 
