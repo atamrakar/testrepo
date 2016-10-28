@@ -13,7 +13,7 @@ node{
 		
   	stage 'Build_Backend_Code'
 	echo "Running: Build_Backend_Code"
-		sh "pwd;mkdir test && cd test/;pwd"
+		sh "pwd;cd test/;pwd"
 	
 	stage 'Next_Step'
 		echo "running next step"
