@@ -29,7 +29,7 @@ node{
 		  		}
 		throw err
 	} 
-	notifyBuild("SUCCESSFUL","OKAY")
+	notifyBuild(currentBuild.result = "SUCCESSFUL","OKAY")
 }
 
 def sendMail(String buildStat,String errr) {
