@@ -37,11 +37,11 @@ def sendMail(String buildStat,String errr) {
 	def subject = "${buildStat}: Job '${job} [${build_number}]'"
 	def summary = "${subject} with ${errr}\n(${env.BUILD_URL})"
 		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStat}\ncheck ${env.BUILD_URL}"
-                sh "git log --after 1.days.ago|egrep -io '[a-z0-9\\-\\._@]++\\.[a-z0-9]{1,4}'|head -1 >lastAuthor"
+                sh "git log --after 1.days.ago|egrep -io '([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
 	def emailStr = "nk255041@teradata.com"
-	def regexStr = /([a-zA-Z0-9_\-\.]+)@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/
+	def regexStr = /([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})/
 if (emailStr.matches(regexStr)){
   // If we arrive here then the emailStr is a correctly formatted email string
 	println "${emailStr} is valid email"
