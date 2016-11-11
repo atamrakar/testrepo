@@ -20,7 +20,7 @@ node{
 		notifyBuild("FAILED")
 		} */
 		sh "uname"
-		step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
+		//step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
 }
         catch(Exception err)
         { 
@@ -30,7 +30,7 @@ node{
 		  		}
 		throw err
 	} 
-	//notifyBuild(currentBuild.result = "SUCCESSFUL","OKAY")
+	notifyBuild(currentBuild.result,"OKAY")
 }
 
 def sendMail(String buildStat,String errr) {
@@ -63,26 +63,26 @@ def notifyBuild(String buildStatus = 'STARTED',String thiserr) {
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
-	  step([$class: 'GitHubCommitStatusSetter',
+	 /* step([$class: 'GitHubCommitStatusSetter',
         contextSource: [$class: 'ManuallyEnteredCommitContextSource',
         context: 'SUCCESS Report'],
         statusResultSource: [$class: 'ConditionalStatusResultSource',
         results: [[$class: 'AnyBuildResult',
         message: 'The Build was SUCCESSFUL',
         state: '${buildStatus}']]]])
-        echo "status set to ${buildStatus}."
+        echo "status set to ${buildStatus}." */
 	  sendMail("SUCCESSFUL","OKAY")
   } else if (buildStatus == 'FAILED') {
     color = 'RED'
     colorCode = '#FF0000'
-	  step([$class: 'GitHubCommitStatusSetter',
+	/*  step([$class: 'GitHubCommitStatusSetter',
         contextSource: [$class: 'ManuallyEnteredCommitContextSource',
         context: 'FAILED Report'],
         statusResultSource: [$class: 'ConditionalStatusResultSource',
         results: [[$class: 'AnyBuildResult',
         message: 'The Build was FAILED',
         state: '${buildStatus}']]]])
-        echo "status set to ${buildStatus}."
+        echo "status set to ${buildStatus}." */
 	  sendMail("FAILED","${thiserr}")
 	    }
 }
