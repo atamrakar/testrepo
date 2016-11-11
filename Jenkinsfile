@@ -5,9 +5,8 @@ branch_name = job[1]
 git_branch_name = branch_name.replaceAll("%2F","/")
 url_branch_name = git_branch_name.replaceAll("/","%252F")
 
-node{   
-	try 
-	{
+try{
+	node{   
 	stage 'Checkout'
   	checkout scm 
 		
@@ -21,17 +20,18 @@ node{
 		} */
 		sh "uname"
 		//step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
+		}
 }
-        catch(Exception err)
+  catch(Exception err)
         { 
 		stage('Email') {
 			notifyBuild("FAILED","${err}")
 			//sh "exit 1"
 		  		}
 		throw err
-	} 
-	notifyBuild(currentBuild.result,"OKAY")
-}
+	} finally{
+		notifyBuild(currentBuild.result,"${err}")
+	}
 
 def sendMail(String buildStat,String errr) {
 	def subject = "${buildStat}: Job '${job} [${build_number}]'"
