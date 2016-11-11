@@ -40,7 +40,7 @@ def sendMail(String buildStat,String errr) {
                 sh "git log --after 1.days.ago|egrep -io '([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})'|head -1 >lastAuthor"
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
-	def emailStr = "nk255041@teradata.com"
+	def emailStr = "opex05.td.teradata.com"
 	def regexStr = /([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})/
 if (emailStr.matches(regexStr)){
   // If we arrive here then the emailStr is a correctly formatted email string
