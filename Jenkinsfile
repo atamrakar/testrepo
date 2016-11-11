@@ -41,7 +41,7 @@ def sendMail(String buildStat,String errr) {
   		def lines = readFile("lastAuthor")
                 println "Email notifications will be send to : ${lines}"
 	def emailStr = "nikhil.kapure@teradata.com"
-	def regexStr = /[a-z0-9\\-\\._]++@\\.[a-z0-9]{1,4}/
+	def regexStr = /[a-zA-Z0-9._+-]++@[a-zA-Z0-9.-]++\\.[a-zA-Z]{2,4}/
 if (emailStr.matches(regexStr)){
   // If we arrive here then the emailStr is a correctly formatted email string
 	println "${emailStr} is valid email"
