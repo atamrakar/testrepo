@@ -1,8 +1,8 @@
 node {
-            def causes = currentBuild.rawBuild.getCauses()
             try {
             // run tests in the same workspace that the project was built
-            sh 'uname -a'
+            def causes = currentBuild.rawBuild.getCauses()
+                        sh 'uname -a'
                         echo "cause: ${causes}"
         } catch (e) {
             // if any exception occurs, mark the build as failed
