@@ -29,9 +29,10 @@ try{
 			//sh "exit 1"
 		  		}
 		throw err
-	} finally{
-		notifyBuild(currentBuild.result,"${err}")
 	}
+step([$class: 'WsCleanup', cleanWhenFailure: true])
+notifyBuild("SUCCESS","${err}")
+}
 
 def sendMail(String buildStat,String errr) {
 	def subject = "${buildStat}: Job '${job} [${build_number}]'"
