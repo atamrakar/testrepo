@@ -1,9 +1,13 @@
 node {
+              wrap([$class: 'BuildUser']) {
+    def user = env.BUILD_USER_ID
+  }
+
+            
             try {
             // run tests in the same workspace that the project was built
-            def causes = User.current()
-                        sh 'uname -a'
-                        echo "cause: ${causes}"
+                                    sh 'uname -a'            
+                        echo "user: ${user}"
         } catch (e) {
             // if any exception occurs, mark the build as failed
             currentBuild.result = 'FAILURE'
