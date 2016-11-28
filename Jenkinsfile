@@ -1,3 +1,4 @@
+node{
 build_number = "${env.BUILD_NUMBER}"
 job = env.JOB_NAME.split('/')
 job_name = job[0]
@@ -85,4 +86,5 @@ def notifyBuild(String buildStatus = 'STARTED',String thiserr) {
         echo "status set to ${buildStatus}." */
 	  sendMail("FAILED","${thiserr}")
 	    }
+}
 }
