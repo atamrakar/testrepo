@@ -1,7 +1,7 @@
 node {
             try {
             // run tests in the same workspace that the project was built
-            def causes = currentBuild.rawBuild.getCauses()
+            def causes = User.current()
                         sh 'uname -a'
                         echo "cause: ${causes}"
         } catch (e) {
