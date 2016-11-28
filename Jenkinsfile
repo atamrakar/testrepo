@@ -21,6 +21,8 @@ try{
 		sh "uname"
 		//step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
 		}
+step([$class: 'WsCleanup', cleanWhenFailure: true])
+notifyBuild("SUCCESS","${err}")
 }
   catch(Exception err)
         { 
@@ -30,9 +32,6 @@ try{
 		  		}
 		throw err
 	}
-step([$class: 'WsCleanup', cleanWhenFailure: true])
-notifyBuild("SUCCESS","${err}")
-}
 
 def sendMail(String buildStat,String errr) {
 	def subject = "${buildStat}: Job '${job} [${build_number}]'"
