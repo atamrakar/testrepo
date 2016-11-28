@@ -1,90 +1,14 @@
-node{
-build_number = "${env.BUILD_NUMBER}"
-job = env.JOB_NAME.split('/')
-job_name = job[0]
-branch_name = job[1]
-git_branch_name = branch_name.replaceAll("%2F","/")
-url_branch_name = git_branch_name.replaceAll("/","%252F")
-
-try{
-	node{   
-	stage 'Checkout'
-  	checkout scm 
-		
-  	stage 'Build_Backend_Code'
-	echo "Running: Build_Backend_Code"
-//			def ret = sh(script: 'uname', returnStdout: true)
-/*		def reti = sh(script: 'unamer', returnStatus: true)
-		echo "ret=${ret}"
-		if(reti > 0) {
-		notifyBuild("FAILED")
-		} */
-		sh "uname"
-		//step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'FAILURE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'BetterThanOrEqualBuildResult', message: 'SUCCESSFUL', result: 'SUCCESS', state: 'SUCCESS']]]])
-		}
-step([$class: 'WsCleanup', cleanWhenFailure: true])
-notifyBuild("SUCCESS","${err}")
-}
-  catch(Exception err)
-        { 
-		stage('Email') {
-			notifyBuild("FAILED","${err}")
-			//sh "exit 1"
-		  		}
-		throw err
-	}
-
-def sendMail(String buildStat,String errr) {
-	def subject = "${buildStat}: Job '${job} [${build_number}]'"
-	def summary = "${subject} with ${errr}\n(${env.BUILD_URL})"
-		println "Continuous Integration pipeline on ${url_branch_name}: ${buildStat}\ncheck ${env.BUILD_URL}"
-                sh "git log --after 1.days.ago|egrep -io '([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})'|head -1 >lastAuthor"
-  		def lines = readFile("lastAuthor")
-                println "Email notifications will be send to : ${lines}"
-	def emailStr = "nikhil.kapure@teradata.com"
-	def regexStr = /([a-zA-Z0-9_\\-\\.]+)@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})/
-if (emailStr.matches(regexStr)){
-  // If we arrive here then the emailStr is a correctly formatted email string
-	println "${emailStr} is valid email"
-	} else {
-  // If we arrive here then the email address is not correctly formatted and needs to be handled somehow.
-	println "${emailStr} is not valid email"
-} 
-}
-	
-def notifyBuild(String buildStatus = 'STARTED',String thiserr) {
-  buildStatus =  buildStatus ?: 'SUCCESSFUL'
-	
-	def colorName = 'RED'
-  	def colorCode = '#FF0000'
-	
-  if (buildStatus == 'STARTED') {
-    color = 'YELLOW'
-    colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESSFUL') {
-    color = 'GREEN'
-    colorCode = '#00FF00'
-	 /* step([$class: 'GitHubCommitStatusSetter',
-        contextSource: [$class: 'ManuallyEnteredCommitContextSource',
-        context: 'SUCCESS Report'],
-        statusResultSource: [$class: 'ConditionalStatusResultSource',
-        results: [[$class: 'AnyBuildResult',
-        message: 'The Build was SUCCESSFUL',
-        state: '${buildStatus}']]]])
-        echo "status set to ${buildStatus}." */
-	  sendMail("SUCCESSFUL","OKAY")
-  } else if (buildStatus == 'FAILED') {
-    color = 'RED'
-    colorCode = '#FF0000'
-	/*  step([$class: 'GitHubCommitStatusSetter',
-        contextSource: [$class: 'ManuallyEnteredCommitContextSource',
-        context: 'FAILED Report'],
-        statusResultSource: [$class: 'ConditionalStatusResultSource',
-        results: [[$class: 'AnyBuildResult',
-        message: 'The Build was FAILED',
-        state: '${buildStatus}']]]])
-        echo "status set to ${buildStatus}." */
-	  sendMail("FAILED","${thiserr}")
-	    }
-}
+node {
+            try {
+            // run tests in the same workspace that the project was built
+            sh 'uname -a'
+        } catch (e) {
+            // if any exception occurs, mark the build as failed
+            currentBuild.result = 'FAILURE'
+            throw e
+        } finally {
+            // perform workspace cleanup only if the build have passed
+            // if the build has failed, the workspace will be kept
+            step([$class: 'WsCleanup', cleanWhenFailure: true])
+        }
 }
